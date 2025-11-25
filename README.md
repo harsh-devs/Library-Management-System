@@ -1,0 +1,3 @@
+This project applies fundamental SQL skills such as database design, table creation with constraints, data manipulation (inserts, updates), and complex querying including joins and date functions. It demonstrates practical use of foreign keys for data integrity and showcases the ability to extract meaningful information by combining data across multiple tables.
+This Library Management System serves as a manageable yet real-world scenario to practice and showcase SQL querying, relational database design, and CRUD operations, useful for both learning and portfolio presentation.
+If you want, I can provide the SQL script for setting up this project and sample queries to demonstrate its functionalities.
