@@ -1,0 +1,81 @@
+-- Create Authors table
+CREATE TABLE Authors (
+    AuthorID INT PRIMARY KEY,
+    AuthorName VARCHAR(100) NOT NULL
+);
+
+-- Create Books table
+CREATE TABLE Books (
+    BookID INT PRIMARY KEY,
+    Title VARCHAR(150) NOT NULL,
+    AuthorID INT,
+    Genre VARCHAR(50),
+    PublicationYear INT,
+    FOREIGN KEY (AuthorID) REFERENCES Authors(AuthorID)
+);
+
+-- Create Members table
+CREATE TABLE Members (
+    MemberID INT PRIMARY KEY,
+    Name VARCHAR(100) NOT NULL,
+    Email VARCHAR(100),
+    MembershipDate DATE
+);
+
+-- Create Loans table
+CREATE TABLE Loans (
+    LoanID INT PRIMARY KEY,
+    BookID INT,
+    MemberID INT,
+    LoanDate DATE,
+    ReturnDate DATE,
+    FOREIGN KEY (BookID) REFERENCES Books(BookID),
+    FOREIGN KEY (MemberID) REFERENCES Members(MemberID)
+);
+
+-- Insert sample data for Authors
+INSERT INTO Authors (AuthorID, AuthorName) VALUES
+(1, 'George Orwell'),
+(2, 'Harper Lee'),
+(3, 'J.K. Rowling');
+
+-- Insert sample data for Books
+INSERT INTO Books (BookID, Title, AuthorID, Genre, PublicationYear) VALUES
+(101, '1984', 1, 'Dystopian', 1949),
+(102, 'To Kill a Mockingbird', 2, 'Fiction', 1960),
+(103, 'Harry Potter and the Sorcerer''s Stone', 3, 'Fantasy', 1997);
+
+-- Insert sample data for Members
+INSERT INTO Members (MemberID, Name, Email, MembershipDate) VALUES
+(1001, 'Alice Johnson', 'alice@example.com', '2024-01-15'),
+(1002, 'Bob Smith', 'bob@example.com', '2023-11-20');
+
+-- Insert sample data for Loans
+INSERT INTO Loans (LoanID, BookID, MemberID, LoanDate, ReturnDate) VALUES
+(5001, 101, 1001, '2025-11-01', NULL),
+(5002, 103, 1002, '2025-10-25', '2025-11-10');
+
+-- Sample query: List all books with authors
+SELECT B.BookID, B.Title, A.AuthorName, B.Genre, B.PublicationYear
+FROM Books B
+JOIN Authors A ON B.AuthorID = A.AuthorID;
+
+-- Sample query: List currently loaned out books
+SELECT B.Title, M.Name, L.LoanDate
+FROM Loans L
+JOIN Books B ON L.BookID = B.BookID
+JOIN Members M ON L.MemberID = M.MemberID
+WHERE L.ReturnDate IS NULL;
+
+-- Sample query: Find overdue loans (assuming current date is 2025-11-25)
+SELECT L.LoanID, B.Title, M.Name, L.LoanDate
+FROM Loans L
+JOIN Books B ON L.BookID = B.BookID
+JOIN Members M ON L.MemberID = M.MemberID
+WHERE L.ReturnDate IS NULL AND L.LoanDate < DATE '2025-11-10';
+
+-- Sample query: Borrowing history for a member
+SELECT B.Title, L.LoanDate, L.ReturnDate
+FROM Loans L
+JOIN Books B ON L.BookID = B.BookID
+WHERE L.MemberID = 1001;
